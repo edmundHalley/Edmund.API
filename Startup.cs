@@ -6,6 +6,8 @@ using Edmund.API.Domain.Services.Communications;
 using Edmund.API.Extensions;
 using Edmund.API.Persistence.Repositories;
 using Edmund.API.Services;
+using Edmund.API.Settings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,11 +17,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using OffiRent.API.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Edmund.API
@@ -36,19 +39,20 @@ namespace Edmund.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder
-                    .AllowAnyMethod()
-                    .AllowCredentials()
-                    .SetIsOriginAllowed((host) => true)
-                    .AllowAnyHeader());
+                    .AllowAnyOrigin());
+            });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseInMemoryDatabase("edmund-api-in-memory");
             });
 
-            services.AddControllers();
-
-            /*AppSettings Section Reference
+            //AppSettings Section Reference
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
@@ -74,12 +78,9 @@ namespace Edmund.API
                         ValidateAudience = false
                     };
                 });
-            */
+            
 
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseInMemoryDatabase("edmund-api-in-memory");
-            });
+
 
             services.AddScoped<IEducationalStageRepository, EducationalStageRepository>();
             services.AddScoped<IEducationalStageSubjectRepository, EducationalStageSubjectRepository>();
@@ -117,15 +118,24 @@ namespace Edmund.API
 
             app.UseRouting();
 
-            app.UseCors("CorsPolicy");
-
+            app.UseCors(options =>
+            {
+                options.WithOrigins("*");
+                options.AllowAnyMethod();
+                options.AllowAnyHeader();
+            });
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("https://localhost:44346/api-docs/v1/swagger.json", "My API V1");
 
+            });
             app.UseCustomSwagger();
         }
     }

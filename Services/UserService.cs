@@ -2,10 +2,16 @@
 using Edmund.API.Domain.Repositories;
 using Edmund.API.Domain.Services;
 using Edmund.API.Domain.Services.Communications;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using Edmund.API.Settings;
 
 namespace Edmund.API.Services
 {
@@ -13,11 +19,45 @@ namespace Edmund.API.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly AppSettings _appSettings;
 
-        public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork)
+        public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings)
         {
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
+            _appSettings = appSettings.Value;
+        }
+        public async Task<AuthenticationResponse> Authenticate(AuthenticationRequest request)
+        {
+            // TODO: Implement Repository-base behavior
+            var user = await _userRepository.Authenticate(request.Username, request.Password);
+
+            // Return when user not found
+            if (user == null) return null;
+
+            var token = GenerateJwtToken(user);
+
+            return new AuthenticationResponse(user, token);
+        }
+        private string GenerateJwtToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+
+            // Setup Security Token Descriptor
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
         }
         public async Task<UserResponse> DeleteAsync(int subjectId)
         {
@@ -85,16 +125,10 @@ namespace Edmund.API.Services
             if (existingUser == null)
                 return new UserResponse("Subject not found");
 
+            existingUser.Username = user.Username;
             existingUser.Email = user.Email;
             existingUser.Password = user.Password;
-            existingUser.FirstName = user.FirstName;
-            existingUser.LastName = user.LastName;
-            existingUser.Identification = user.Identification;
             existingUser.PhoneNumber = user.PhoneNumber;
-            existingUser.Birth = user.Birth;
-            existingUser.Sex = user.Sex;
-            existingUser.Address = user.Address;
-            existingUser.Type = user.Type;
 
             try
             {

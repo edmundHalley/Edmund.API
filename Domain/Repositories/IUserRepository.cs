@@ -14,6 +14,7 @@ namespace Edmund.API.Domain.Repositories
         Task<IEnumerable<User>> ListUsersByHeadUserAsync(int userId);
         Task<User> GetSingleByIdAsync(int userId);
         Task<IEnumerable<Mark>> CheckTeacher(int userId, bool type);
+        Task<User> Authenticate(string username, string password);
         Task AddAsync(User user);
         void Remove(User user);
         void Update(User user);

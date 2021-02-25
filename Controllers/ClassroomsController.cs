@@ -7,6 +7,7 @@ using Edmund.API.Resources.Classroom;
 using Edmund.API.Resources.Mark;
 using Edmund.API.Resources.Subject;
 using Edmund.API.Resources.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace Edmund.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ClassroomsController : ControllerBase

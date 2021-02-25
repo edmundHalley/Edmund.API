@@ -3,6 +3,7 @@ using Edmund.API.Domain.Models;
 using Edmund.API.Domain.Services.Communications;
 using Edmund.API.Extensions;
 using Edmund.API.Resources.Subject;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Edmund.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SubjectsController : ControllerBase

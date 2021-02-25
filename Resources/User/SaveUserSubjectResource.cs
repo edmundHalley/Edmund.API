@@ -7,7 +7,6 @@ namespace Edmund.API.Resources.User
 {
     public class SaveUserSubjectResource
     {
-        public int UserId { get; set; }
-        public int SubjectId { get; set; }
+
     }
 }

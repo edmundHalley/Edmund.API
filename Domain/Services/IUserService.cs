@@ -13,6 +13,7 @@ namespace Edmund.API.Domain.Services
         Task<IEnumerable<User>> ListByHeadUserIdAsync(int userId);
         Task<IEnumerable<User>> ListEducationalStageUsersAsync(int educationalStageId);
         Task<IEnumerable<User>> ListClassroomUsersAsync(int classroomId);
+        Task<AuthenticationResponse> Authenticate(AuthenticationRequest request);
         Task<UserResponse> GetByIdAsync(int userId);
         Task<UserResponse> SaveAsync(User user);
         Task<UserResponse> UpdateAsync(int userId, User user);

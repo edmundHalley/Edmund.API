@@ -4,6 +4,7 @@ using Edmund.API.Domain.Services;
 using Edmund.API.Extensions;
 using Edmund.API.Resources.Mark;
 using Edmund.API.Resources.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Edmund.API.Controllers
 {
+    [Authorize]
     [Route("api/users")]
     [ApiController]
     public class UserSubjectsController : ControllerBase

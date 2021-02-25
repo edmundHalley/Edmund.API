@@ -18,6 +18,10 @@ namespace Edmund.API.Persistence.Repositories
         {
             await _context.Users.AddAsync(user);
         }
+        public async Task<User> Authenticate(string username, string password)
+        {
+            return await _context.Users.Include(x => x.Users).FirstOrDefaultAsync(x => x.Username == username && x.Password == password);
+        }
 
         public async Task<IEnumerable<Mark>> CheckTeacher(int userId, bool type)
         {

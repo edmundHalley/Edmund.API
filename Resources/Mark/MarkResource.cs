@@ -19,8 +19,6 @@ namespace Edmund.API.Resources.Mark
         public int TeacherId { get; set; }
         public int SubjectId { get; set; }
         public int MarksRecordId { get; set; }
-        public UserResource User { get; set; }
-        public SubjectResource Subject { get; set; }
-        public MarksRecordResource MarksRecord { get; set; }
+
     }
 }

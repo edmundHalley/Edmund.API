@@ -3,6 +3,7 @@ using Edmund.API.Domain.Models;
 using Edmund.API.Domain.Services;
 using Edmund.API.Extensions;
 using Edmund.API.Resources.MarksRecord;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Edmund.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MarksRecordsController : ControllerBase

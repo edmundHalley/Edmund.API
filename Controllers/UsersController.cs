@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Edmund.API.Domain.Models;
 using Edmund.API.Domain.Services;
+using Edmund.API.Domain.Services.Communications;
 using Edmund.API.Extensions;
 using Edmund.API.Resources.EducationalStage;
 using Edmund.API.Resources.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -13,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace Edmund.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -25,7 +28,17 @@ namespace Edmund.API.Controllers
             _userService = userService;
             _mapper = mapper;
         }
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Authenticate([FromBody] AuthenticationRequest request)
+        {
+            var response = await _userService.Authenticate(request);
 
+            if (response == null)
+                return BadRequest(new { message = "Invalid Username or Password" });
+
+            return Ok(response);
+        }
         [SwaggerOperation(
             Summary = "List of all Users",
             Description = "List of all Users")]

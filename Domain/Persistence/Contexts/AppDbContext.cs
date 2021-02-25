@@ -268,7 +268,7 @@ namespace Edmund.API.Domain.Persistence.Contexts
                 new Subject
                 {
                     Id = 1,
-                    Name = "Matematica",
+                    Name = "Matemática",
                     ClassroomId = 4                    
                 },
                 new Subject
@@ -280,24 +280,42 @@ namespace Edmund.API.Domain.Persistence.Contexts
                 new Subject
                 {
                     Id = 3,
-                    Name = "Ciencia y Ambiente",
+                    Name = "Ciencia y Tecnología",
+                    ClassroomId = 4
+                },
+                 new Subject
+                 {
+                     Id = 4,
+                     Name = "Religión",
+                     ClassroomId = 4
+                 },
+                new Subject
+                {
+                    Id = 5,
+                    Name = "Razonamiento Verbal",
                     ClassroomId = 4
                 },
                 new Subject
                 {
-                    Id = 4,
+                    Id = 6,
+                    Name = "Razonamiento Matemático",
+                    ClassroomId = 4
+                },
+                new Subject
+                {
+                    Id = 7,
                     Name = "Educación Motriz",
                     ClassroomId = 1
                 },
                 new Subject
                 {
-                    Id = 5,
+                    Id = 8,
                     Name = "Biologia",
                     ClassroomId = 10
                 },
                 new Subject
                 {
-                    Id = 6,
+                    Id = 9,
                     Name = "Geometría",
                     ClassroomId = 10
                 });
@@ -322,8 +340,12 @@ namespace Edmund.API.Domain.Persistence.Contexts
                 .IsRequired().HasMaxLength(30);
             builder.Entity<User>().Property(a => a.LastName)
                 .IsRequired().HasMaxLength(30);
+            builder.Entity<User>().Property(a => a.Username)
+                .IsRequired().HasMaxLength(30);
+            builder.Entity<User>().HasIndex(a => a.Username).IsUnique();
             builder.Entity<User>().Property(a => a.Email)
                 .IsRequired().HasMaxLength(30);
+            builder.Entity<User>().HasIndex(a => a.Email).IsUnique();
             builder.Entity<User>().Property(a => a.Identification)
                 .IsRequired().HasMaxLength(30);
             builder.Entity<User>().Property(a => a.Password)
@@ -347,12 +369,13 @@ namespace Edmund.API.Domain.Persistence.Contexts
                 new User
                 {
                     Id = 1,
-                    Email = "oscar@gmail.com",
+                    Username = "admin",
+                    Email = "carmen186_@hotmail.com",
                     Password = "admin",
-                    FirstName = "Oscar",
-                    LastName = "Cabrera",
-                    Identification = "72949109",
-                    PhoneNumber = "924273670",
+                    FirstName = "Carmen",
+                    LastName = "Castillo",
+                    Identification = "08499143",
+                    PhoneNumber = "912921139",
                     Sex = true,
                     Address = "Jr. Augusto Aguirre 3068",
                     Type = true,
@@ -360,6 +383,7 @@ namespace Edmund.API.Domain.Persistence.Contexts
                 new User
                 {
                     Id = 2,
+                    Username = "profesor1",
                     Email = "profesor@gmail.com",
                     Password = "profesor",
                     FirstName = "Profesor",
@@ -375,6 +399,7 @@ namespace Edmund.API.Domain.Persistence.Contexts
                 new User
                 {
                     Id = 3,
+                    Username = "alumno1",
                     Email = "alumno@gmail.com",
                     Password = "alumno",
                     FirstName = "alumno",

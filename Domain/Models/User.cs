@@ -7,9 +7,12 @@ namespace Edmund.API.Domain.Models
     public class User
     {
         public int Id { get; set; }
+        public string Username { get; set; }
         public string Email { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
+        [JsonIgnore]
+        public string Token { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Identification { get; set; }
@@ -27,9 +30,5 @@ namespace Edmund.API.Domain.Models
         public List<Mark> Marks { get; set; } = new List<Mark>();
         public List<MarksRecord> MarksRecords { get; set; } = new List<MarksRecord>();
         public List<User> Users { get; set; } = new List<User>();
-
-        [JsonIgnore]
-        public string Token { get; set; }
-
     }
 }

@@ -9,9 +9,6 @@ namespace Edmund.API.Resources.User
 {
     public class UserSubjectResource
     {
-        public int UserId { get; set; }
-        public int SubjectId { get; set; }
-        public UserResource User { get; set; }
         public SubjectResource Subject { get; set; }
     }
 }
